@@ -1,12 +1,22 @@
 import unittest
 from selenium import webdriver
+from TestHelper import *
 
 class Register(unittest.TestCase):
-    def setUp(self):
-        self.driver = webdriver.Firefox()
 
     def test_Register(self):
-        driver=self.driver
-        driver.get("https://uat.vipoutlet.com")
+        helpernavigate.test_1;
+
+    def test_logout(self):
+        helpernavigate.test_2;
+
+
+
+
+
+
+
+
+
 
 
