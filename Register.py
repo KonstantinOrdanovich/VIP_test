@@ -2,18 +2,21 @@ import unittest
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.keys import Keys
-
 from TestHelper import *
 from creditCardGenerator import mastercard
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
+from ErrorHandlingRegistration import *
 
 
 class helpernavigate(unittest.TestCase):
     def setUp(self):
         self.driver = webdriver.Firefox()
+
+    def test_1_errorhandlingregistration(self):
+        ErrorHandlingRegistration
 
     def test_1_register(self):
         driver = self.driver
