@@ -26,7 +26,7 @@ class values():
     placeOrderId = "#place_order"
     orderId = ".order-id-row__id > a:nth-child(1)"
     addPaymentId = ".payment-row-box > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > button:nth-child(2)"
-
+    addAddressID = "div.small-12:nth-child(7) > button:nth-child(1)"
 
 class VipOutletTestCheckout(unittest.TestCase):
     def test_1_register(self):
@@ -52,6 +52,9 @@ class VipOutletTestCheckout(unittest.TestCase):
             except NoSuchElementException:
                 print "Can't add product to cart for first time user -[E14] Product Is Already Added To Your Shopping Cart. You Have Reached Quantity Limit For This Product "
                 self.driver.close()
+            else:
+                print "Autotest over"
+                break
         addtocart = self.driver.find_element_by_css_selector(".single_add_to_cart_button")
         addtocart.click()
         while True:
@@ -62,39 +65,11 @@ class VipOutletTestCheckout(unittest.TestCase):
                 print "Unable to click Add Payment in Checkout, retrying"
             else:
                 break
-        mascard = self.driver.find_element_by_css_selector("#MC")
-        mascard.click()
-        credcard = self.driver.find_element_by_css_selector(
-            "#wc-authorize-net-cim-credit-card-account-number").clear()
-        self.driver.execute_script(
-            "document.querySelector('#wc-authorize-net-cim-credit-card-account-number').value=" + str(
-                mastercard) + "")
-
-        cardholder = self.driver.find_element_by_css_selector("#wc-authorize-net-cim-credit-card-holder-name")
-        cardholder.send_keys("K Tester")
-        CVV = self.driver.find_element_by_css_selector("#wc-authorize-net-cim-credit-card-csc")
-        CVV.send_keys("321")
-        addaddressCheckout = self.driver.find_element_by_css_selector(".add-new-address-icon-wrapper")
-        addaddressCheckout.click()
-        firstNameCheckout = self.driver.find_element_by_css_selector("#billing_first_name")
-        firstNameCheckout.send_keys("konstantin")
-        lastnameCheckout = self.driver.find_element_by_css_selector("#billing_last_name")
-        lastnameCheckout.send_keys("Tester")
-        self.driver.execute_script("document.querySelector('#billing_phone').value =" + str(values.phone) + "")
-        company = self.driver.find_element_by_css_selector("#billing_company")
-        company.send_keys("TRG")
-        address = self.driver.find_element_by_css_selector("#billing_address_1")
-        address.send_keys("1835 E Hallandale Beach BLVD # 618")
-        cityCheckout = self.driver.find_element_by_css_selector("#billing_city")
-        cityCheckout.send_keys("Hallandale Beach")
-        state = self.driver.find_element_by_css_selector(
-            "#billing_state_field > span:nth-child(3) > span:nth-child(1) > span:nth-child(1)")
-        state.click()
-        state.send_keys("Florida")
-        state.send_keys(Keys.ENTER)
-        zipcode = self.driver.find_element_by_css_selector("#billing_postcode")
-        zipcode.send_keys("33009")
-        savepayment = self.driver.find_element_by_css_selector("div.small-12:nth-child(7) > button:nth-child(1)")
+        sign_up = TestHelper.CheckoutPage(self.driver)
+        sign_up.credit_card_checkout()
+        sign_up = TestHelper.AddAddressCheckout(self.driver)
+        sign_up.add_address_checkout()
+        savepayment = self.driver.find_element_by_css_selector(values.addAddressID)
         savepayment.click()
         while True:
             try:
@@ -104,7 +79,13 @@ class VipOutletTestCheckout(unittest.TestCase):
                 print "Unable to click Place Order, retrying"
             else:
                 break
-        
-        orderIdElement = self.driver.find_element_by_css_selector(values.orderId)
-        print "Order " + orderIdElement + "has been created"
-        orderIdElement.click()
+        while True:
+            try:
+                orderIdElement = self.driver.find_element_by_css_selector(values.orderId)
+                orderIdElement.click()
+            except WebDriverException,e:
+                print "Unable to click Order ID, retrying"
+            else:
+                break
+    def tearDown(self):
+        self.driver.close()
