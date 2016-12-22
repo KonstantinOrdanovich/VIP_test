@@ -13,12 +13,13 @@ termsId = ".box"
 error1 = "An Account Is Already Registered With Your Email Address. Please Login."
 error2 = "You Must Agree To The Terms Before Registering!"
 error3 = "Please Enter An Account Password."
+server = "https://pvg-890-fix-notices.dev.vipoutlet.com/"
 
 
-class VipOutletTest(unittest.TestCase):
+class VipOutletTestRegister(unittest.TestCase):
     def test_valid_register(self):
         self.driver = webdriver.Firefox()
-        self.driver.get("https://uat.vipoutlet.com/")
+        self.driver.get(server)
         self.driver.find_element_by_css_selector(singUpId).click()
         sign_up = TestHelper.LoginPage(self.driver)
         sign_up.signUp_test()
@@ -37,7 +38,7 @@ class VipOutletTest(unittest.TestCase):
 
     def test_valid_policies(self):
         self.driver = webdriver.Firefox()
-        self.driver.get("https://uat.vipoutlet.com/")
+        self.driver.get(server)
         self.driver.find_element_by_css_selector(singUpId).click()
         sign_up = TestHelper.LoginPage(self.driver)
         sign_up.signUp_test()
@@ -57,7 +58,7 @@ class VipOutletTest(unittest.TestCase):
 
     def test_valid_password(self):
         self.driver = webdriver.Firefox()
-        self.driver.get("https://uat.vipoutlet.com/")
+        self.driver.get(server)
         self.driver.find_element_by_css_selector(singUpId).click()
         sign_up = TestHelper.LoginPage(self.driver)
         sign_up.signUp_test()

@@ -13,6 +13,14 @@ testemail3 = "acyll1988@armyspy.com"
 server = "https://uat.vipoutlet.com"
 phone = random.randint(100000000000, 999999999999)
 existedEmail = "ninja@test.com"
+termsId = ".box"
+error1 = "An Account Is Already Registered With Your Email Address. Please Login."
+error2 = "You Must Agree To The Terms Before Registering!"
+error3 = "Please Enter An Account Password."
+placeOrderId = "#place_order"
+orderId = ".order-id-row__id > a:nth-child(1)"
+addPaymentId = ".payment-row-box > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > button:nth-child(2)"
+addAddressID = "div.small-12:nth-child(7) > button:nth-child(1)"
 
 
 class LoginPage():
@@ -113,6 +121,16 @@ class AddAddressCheckout():
         self.stateElement.send_keys(Keys.ENTER)
         self.zipcodeElement.send_keys("33009")
 
+class WalmartPage():
+    wmprogramm = "body > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > a:nth-child(3)"
+
+    def __init__(self,driver):
+        self.driver = driver
+        self.referal = self.driver.find_element_by_css_selector(self.wmprogramm)
+
+
+    def walmart_checkout(self):
+        self.referal.click()
 
 
 
