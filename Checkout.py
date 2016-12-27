@@ -8,43 +8,30 @@ import random
 
 
 class values():
-    emailId = "div.row > div:nth-child(1) > form:nth-child(2) > input:nth-child(3)"
-    existerEmail = "ninja@test.com"
-    passwordId = "password"
-    registerId = "register"
-    singUpId = ".header__profile-login-links > div:nth-child(3) > a:nth-child(1)"
+
     productId = "div.carousel-row:nth-child(4) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > a:nth-child(1) > div:nth-child(1) > div:nth-child(1) > img:nth-child(1)"
-    testemail = "acyll" + str(random.randint(100, 9999)) + "@armyspy.com"
-    testemail1 = ("acyll" + str(random.randint(2000, 7000)) + "@armyspy.com")
-    testemail2 = ("acyll" + str(random.randint(7000, 9000)) + "@armyspy.com")
-    termsId = ".box"
     error1 = "An Account Is Already Registered With Your Email Address. Please Login."
     error2 = "You Must Agree To The Terms Before Registering!"
     error3 = "Please Enter An Account Password."
     server = "https://uat.vipoutlet.com/"
-    phone = random.randint(100000000000, 999999999999)
-    placeOrderId = "#place_order"
-    orderId = ".order-id-row__id > a:nth-child(1)"
-    addPaymentId = ".payment-row-box > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > button:nth-child(2)"
-    addAddressID = "div.small-12:nth-child(7) > button:nth-child(1)"
+    newproductId = "div.carousel-row:nth-child(5) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > a:nth-child(1) > div:nth-child(1) > div:nth-child(1) > img:nth-child(1)"
 
 class VipOutletTestCheckout(unittest.TestCase):
     def test_1_register(self):
         self.driver = webdriver.Firefox()
         self.driver.get(values.server)
-        self.driver.find_element_by_css_selector(values.singUpId).click()
+        signUpClick = TestHelper.HomePage(self.driver)
+        signUpClick.signUpClick()
         sign_up = TestHelper.LoginPage(self.driver)
         sign_up.signUp_test_full()
-        register = self.driver.find_element_by_name(values.registerId)
-        register.click()
+        sign_up.registerClick()
         if values.error1 in self.driver.page_source:
             sign_up.signUp_else()
-            register = self.driver.find_element_by_name(values.registerId)
-            register.click()
-            print "User " + values.testemail2 + " registered"
+            sign_up.registerClick()
+            print "User " + TestHelper.testemail + " registered"
         else:
-            print "User " + values.testemail + " registered"
-        product = self.driver.find_element_by_css_selector(values.productId)
+            print "User " + TestHelper.testemail2 + " registered"
+        product = self.driver.find_element_by_css_selector(values.newproductId)
         product.click()
         while False:
             try:
@@ -55,26 +42,23 @@ class VipOutletTestCheckout(unittest.TestCase):
             else:
                 print "Autotest over"
                 break
-        addtocart = self.driver.find_element_by_css_selector(".single_add_to_cart_button")
-        addtocart.click()
+        addtocart = TestHelper.addtoCartProductPage(self.driver)
+        addtocart.addToCart()
+        checkout = TestHelper.AddAddressCheckout(self.driver)
         while True:
             try:
-                addpayment = self.driver.find_element_by_css_selector(values.addPaymentId)
-                addpayment.click()
+                checkout.addPaymentCheckout()
             except WebDriverException,e:
                 print "Unable to click Add Payment in Checkout, retrying"
             else:
                 break
-        sign_up = TestHelper.CheckoutPage(self.driver)
-        sign_up.credit_card_checkout()
-        sign_up = TestHelper.AddAddressCheckout(self.driver)
-        sign_up.add_address_checkout()
-        savepayment = self.driver.find_element_by_css_selector(values.addAddressID)
-        savepayment.click()
+        checkout.credit_card_checkout()
+        checkout.add_address_checkout()
+        checkout.addAddressCheckoutPayment()
         while True:
             try:
-                placeOrder = self.driver.find_element_by_css_selector(values.placeOrderId)
-                placeOrder.click()
+                placeOrder = TestHelper.placeOrder(self.driver)
+                placeOrder.placeOrder()
             except WebDriverException, e:
                 print "Unable to click Place Order, retrying"
             else:
@@ -87,5 +71,5 @@ class VipOutletTestCheckout(unittest.TestCase):
                 print "Unable to click Order ID, retrying"
             else:
                 break
-    def tearDown(self):
-        self.driver.close()
+    # def tearDown(self):
+    #     self.driver.close()
