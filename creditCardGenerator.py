@@ -109,8 +109,6 @@ def output(title, numbers):
 generator = Random()
 generator.seed()        # Seed from current time
 
-print("credit card generator by ..:: crazyjunkie ::..\n")
-
 mastercard = credit_card_number(generator, mastercardPrefixList, 16, 1)
 print(output("Mastercard", mastercard))
 #

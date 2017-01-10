@@ -1,10 +1,6 @@
 import random
-import unittest
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.common.by import By
 from creditCardGenerator import mastercard
 
 testemail = ("acyll" + str(random.randint(2000, 7000)) + "@armyspy.com")
@@ -18,16 +14,26 @@ error2 = "You Must Agree To The Terms Before Registering!"
 error3 = "Please Enter An Account Password."
 orderId = ".order-id-row__id > a:nth-child(1)"
 
-class HomePage():
-    signUpId = ".header__profile-login-links > div:nth-child(3) > a:nth-child(1)"
 
-    def __init__(self,driver):
+class HomePage:
+    signUpId = ".header__profile-login-links > div:nth-child(3) > a:nth-child(1)"
+    productId = "column small-12 text-center product-item__image"
+
+    def __init__(self, driver):
         self.driver = driver
-        self.signUpElement =self.driver.find_element_by_css_selector(self.signUpId)
+        self.signUpElement = self.driver.find_element_by_css_selector(self.signUpId)
+
+    # Click Sign Up button on Home Page
     def signUpClick(self):
         self.signUpElement.click()
 
-class LoginPage():
+    #Click on some product on Home Page in Carrousels
+    def productOnHomePage(self):
+        self.productElement = self.driver.execute_script(
+            "jQuery(document.getElementsByClassName('" + self.productId + "')).eq(1).click()")
+
+
+class LoginPage:
     username = "Konstantin"
     lastname = "Tester"
     signupFieldId = ".header__profile-login-links > div:nth-child(3) > a:nth-child(1)"
@@ -40,7 +46,6 @@ class LoginPage():
     password = "test"
     termsId = ".box"
     registerId = ".standard-btn"
-
 
     def __init__(self, driver):
         self.driver = driver
@@ -72,15 +77,20 @@ class LoginPage():
     def registerClick(self):
         self.registerElement.click()
 
-class addtoCartProductPage():
+
+class addtoCartProductPage:
     addtoCartId = ".single_add_to_cart_button"
-    def __init__(self,driver):
+
+    def __init__(self, driver):
         self.driver = driver
-        self.addtocartElement=self.driver.find_element_by_css_selector(self.addtoCartId)
+        self.addtocartElement = self.driver.find_element_by_css_selector(self.addtoCartId)
+
+    # Adding product to Cart
     def addToCart(self):
         self.addtocartElement.click()
 
-class AddAddressCheckout():
+
+class AddAddressCheckout:
     mascardId = "#MC"
     credcardId = "#wc-authorize-net-cim-credit-card-account-number"
     cardholderId = "#wc-authorize-net-cim-credit-card-holder-name"
@@ -93,20 +103,21 @@ class AddAddressCheckout():
     cityId = "#billing_city"
     stateId = "#billing_state_field > span:nth-child(3) > span:nth-child(1) > span:nth-child(1)"
     zipcodeId = "#billing_postcode"
-    addpaymentId ="#wc-authorize-net-cim-credit-card-credit-card-form > div > div.column.small-12 > div > div.column.small-12.add-address-form > div > div:nth-child(7) > button"
+    addpaymentId = "#wc-authorize-net-cim-credit-card-credit-card-form > div > div.column.small-12 > div > div.column.small-12.add-address-form > div > div:nth-child(7) > button"
     savePaymentbuttonCheckout = "div.small-12:nth-child(7) > button:nth-child(1)"
     addPaymentCheckoutId = ".payment-row-box > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > button:nth-child(2)"
+    # addPaymentCreditCardId = "#payment > div.column.wc_payment_methods.payment_methods.methods > div > div > div > div:nth-child(9) > div > button"
+    placeOrderId = "#place_order"
 
-
-    def __init__(self,driver):
-        self.driver =driver
+    def __init__(self, driver):
+        self.driver = driver
         self.addaddressCheckoutIcon = self.driver.find_element_by_css_selector(self.addressId)
-        self.firstNameCheckout =self.driver.find_element_by_css_selector(self.firstNameId)
+        self.firstNameCheckout = self.driver.find_element_by_css_selector(self.firstNameId)
         self.lastnameCheckout = self.driver.find_element_by_css_selector(self.lastNameId)
         self.companyElement = self.driver.find_element_by_css_selector(self.companyId)
         self.addressElement = self.driver.find_element_by_css_selector(self.billingaddressId)
         self.cityElement = self.driver.find_element_by_css_selector(self.cityId)
-        self.stateElement =self.driver.find_element_by_css_selector(self.stateId)
+        self.stateElement = self.driver.find_element_by_css_selector(self.stateId)
         self.zipcodeElement = self.driver.find_element_by_css_selector(self.zipcodeId)
         self.AddAddressElementCheckout = self.driver.find_element_by_css_selector(self.savePaymentbuttonCheckout)
         self.addPaymentCheckoutElement = self.driver.find_element_by_css_selector(self.addPaymentCheckoutId)
@@ -114,10 +125,15 @@ class AddAddressCheckout():
         self.credcard = self.driver.find_element_by_css_selector(self.credcardId)
         self.cardholder = self.driver.find_element_by_css_selector(self.cardholderId)
         self.CVVElement = self.driver.find_element_by_css_selector(self.CVVId)
+        # self.addPaymentCreditCardNumberElement = self.driver.find_element_by_css_selector(self.addPaymentCreditCardId)
+        self.placeOrderElement = self.driver.find_element_by_css_selector(self.placeOrderId)
+        self.savePaymentElement = self.driver.find_element_by_css_selector(self.addpaymentId)
 
-
-    def add_address_checkout(self):
+    # Click (+) button in Secure Checkout for Add Payment
+    def addAddressIcon(self):
         self.addaddressCheckoutIcon.click()
+
+    def add_address_checkout(self): # Add Address field for Add payment in Checkout
         self.firstNameCheckout.send_keys("Konstantin")
         self.lastnameCheckout.send_keys("Tester")
         self.driver.execute_script("document.querySelector('#billing_phone').value =" + str(phone) + "")
@@ -129,9 +145,11 @@ class AddAddressCheckout():
         self.stateElement.send_keys(Keys.ENTER)
         self.zipcodeElement.send_keys("33009")
 
+    # Click button [Add Payment] on regular/Walmart Checkout, when no credit card created
     def addPaymentCheckout(self):
         self.addPaymentCheckoutElement.click()
 
+    # Fill value of credit card in Add New Payment first time in Secure Checkout
     def credit_card_checkout(self):
         self.mascard.click()
         self.credcard.clear()
@@ -141,18 +159,19 @@ class AddAddressCheckout():
         self.cardholder.send_keys("K Tester")
         self.CVVElement.send_keys(str(random.randint(111, 999)))
 
+    # Click Button [Save Address] in Add Credit Card > Add Payment> Add New Address
     def addAddressCheckoutPayment(self):
         self.AddAddressElementCheckout.click()
 
-class placeOrder():
-    placeOrderId = "#place_order"
-    def __init__(self,driver):
-        self.driver = driver
-        self.placeOrderElement = self.driver.find_element_by_css_selector(self.placeOrderId)
+
+    # Click [Add new Payment] in Payment Method Checkout
+    # def addPaymentCreditCardNumber(self):
+    #     self.addPaymentCreditCardNumberElement.click()
+
+    # Click Button [Place Order] to Proceed Order
     def placeOrder(self):
         self.placeOrderElement.click()
 
-
-
-
-
+    # Button [Save payment] for add second credit card in SC
+    def savePayment(self):
+        self.savePaymentElement.click()

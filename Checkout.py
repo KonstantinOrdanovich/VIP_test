@@ -13,26 +13,23 @@ class values():
     error1 = "An Account Is Already Registered With Your Email Address. Please Login."
     error2 = "You Must Agree To The Terms Before Registering!"
     error3 = "Please Enter An Account Password."
-    server = "https://uat.vipoutlet.com/"
-    newproductId = "div.carousel-row:nth-child(5) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > a:nth-child(1) > div:nth-child(1) > div:nth-child(1) > img:nth-child(1)"
 
 class VipOutletTestCheckout(unittest.TestCase):
+    def __init__(self, driver):
+        self.driver = driver
     def test_1_register(self):
-        self.driver = webdriver.Firefox()
-        self.driver.get(values.server)
-        signUpClick = TestHelper.HomePage(self.driver)
-        signUpClick.signUpClick()
+        HomePage = TestHelper.HomePage(self.driver)
+        HomePage.signUpClick()
         sign_up = TestHelper.LoginPage(self.driver)
         sign_up.signUp_test_full()
         sign_up.registerClick()
         if values.error1 in self.driver.page_source:
             sign_up.signUp_else()
             sign_up.registerClick()
-            print "User " + TestHelper.testemail + " registered"
-        else:
             print "User " + TestHelper.testemail2 + " registered"
-        product = self.driver.find_element_by_css_selector(values.newproductId)
-        product.click()
+        else:
+            print "User " + TestHelper.testemail + " registered"
+        HomePage.productOnHomePage()
         while False:
             try:
                 assert "[E14] Product Is Already Added To Your Shopping Cart. You Have Reached Quantity Limit For This Product" in self.driver.page_source
@@ -53,23 +50,8 @@ class VipOutletTestCheckout(unittest.TestCase):
             else:
                 break
         checkout.credit_card_checkout()
+        checkout.addAddressIcon()
         checkout.add_address_checkout()
         checkout.addAddressCheckoutPayment()
-        while True:
-            try:
-                placeOrder = TestHelper.placeOrder(self.driver)
-                placeOrder.placeOrder()
-            except WebDriverException, e:
-                print "Unable to click Place Order, retrying"
-            else:
-                break
-        while True:
-            try:
-                orderIdElement = self.driver.find_element_by_css_selector(values.orderId)
-                orderIdElement.click()
-            except WebDriverException,e:
-                print "Unable to click Order ID, retrying"
-            else:
-                break
-    # def tearDown(self):
-    #     self.driver.close()
+
+
