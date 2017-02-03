@@ -8,33 +8,16 @@ class VipOutletTestCheckout(unittest.TestCase):
     def __init__(self,driver):
         self.driver = driver
     def testCheckout(self):
-        HomePage = TestHelper.HomePage(self.driver)
-        HomePage.signUpClick()
-        sign_up = TestHelper.LoginPage(self.driver)
-        sign_up.signUp_test_full()
+        register = Registration.Registration(self.driver)
+        register.test_register()
         while True:
             try:
-                sign_up.registerClick()
-            except WebDriverException:
-                print "Button is not available"
-            else:
-                break
-        if TestHelper.error1 in self.driver.page_source:
-            sign_up.signUp_else()
-            sign_up.registerClick()
-            print "User " + TestHelper.testemail2 + " registered"
-        else:
-            print "User " + TestHelper.testemail + " registered"
-        print self.driver.current_url
-        url = self.driver.current_url
-        if url == "https://uat.vipoutlet.com/":
-            print "PVG 838 is Done - After Login on version page redirect to My Account, should on Home Page"
-        else:
-            print "PVG 838 is Failed"
-
-        header =TestHelper.Header(self.driver)
-        header.LoginUserHeader()
-        HomePage.productOnHomePage()
+                header =TestHelper.Header(self.driver)
+                header.LoginUserHeader()
+            except NoSuchElementException: print "Checking Header"
+            else: break
+        addproduct = TestHelper.addproductOnHomePage(self.driver)
+        addproduct.productOnHomePage()
         while False:
             try:
                 assert "[E14] Product Is Already Added To Your Shopping Cart. You Have Reached Quantity Limit For This Product" in self.driver.page_source

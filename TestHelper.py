@@ -23,7 +23,7 @@ orderId = ".order-id-row__id > a:nth-child(1)"
 
 class HomePage:
     signUpId = ".header__profile-login-links > div:nth-child(3) > a:nth-child(1)"
-    productId = "column small-12 text-center product-item__image"
+    # productId = "column small-12 text-center product-item__image"
     searchId = ".header-search__button"
 
     def __init__(self, driver):
@@ -34,29 +34,23 @@ class HomePage:
     # Click Sign Up button on Home Page
     def signUpClick(self):
         self.signUpElement.click()
+    def search(self):
+        self.searchElement.click()
+    # def productOnHomePage(self):
+    #     self.productElement = self.driver.execute_script(
+    #         "jQuery(document.getElementsByClassName('" + self.productId + "')).eq(1).click()")
 
-    #Click on some product on Home Page in Carrousels
+class addproductOnHomePage:
+    productId = "column small-12 text-center product-item__image"
+    def __init__(self,driver):
+        self.driver = driver
     def productOnHomePage(self):
         self.productElement = self.driver.execute_script(
             "jQuery(document.getElementsByClassName('" + self.productId + "')).eq(1).click()")
 
-    def search(self):
-        self.searchElement.click()
-
-
-class SearchPage:
-    signUpIdSearch = ".header__profile-login-links > div:nth-child(3) > a:nth-child(1)"
-
-    def __init__(self, driver):
-        self.driver = driver
-        self.signUpElementSearch = self.driver.find_element_by_css_selector(self.signUpIdSearch)
-    def signUpSearch(self):
-        self.signUpElementSearch.click()
-
 class LoginPage:
     username = "Konstantin"
     lastname = "Tester"
-    signupFieldId = ".header__profile-login-links > div:nth-child(3) > a:nth-child(1)"
     usernameFileldId = "div.row > div:nth-child(1) > form:nth-child(2) > input:nth-child(1)"
     lastmameFieldId = "div.row > div:nth-child(1) > form:nth-child(2) > input:nth-child(2)"
     server = "https://uat.vipoutlet.com"
@@ -218,8 +212,6 @@ class chooseAddress:
     def chooseAddressAddPayment(self):
         self.chooseAddressElement.click()
         self.selectExistedAddressElement.click()
-
-
 
 class changePayment:
     changePaymentId = ".payment-row-box > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > button:nth-child(2)"
