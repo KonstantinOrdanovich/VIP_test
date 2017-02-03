@@ -1,34 +1,39 @@
 import unittest
-from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, WebDriverException
-from selenium.webdriver.common.keys import Keys
-from creditCardGenerator import mastercard
 import TestHelper
-import random
+import Registration
 
-
-class values():
-
-    productId = "div.carousel-row:nth-child(4) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > a:nth-child(1) > div:nth-child(1) > div:nth-child(1) > img:nth-child(1)"
-    error1 = "An Account Is Already Registered With Your Email Address. Please Login."
-    error2 = "You Must Agree To The Terms Before Registering!"
-    error3 = "Please Enter An Account Password."
 
 class VipOutletTestCheckout(unittest.TestCase):
-    def __init__(self, driver):
+    def __init__(self,driver):
         self.driver = driver
-    def test_1_register(self):
+    def testCheckout(self):
         HomePage = TestHelper.HomePage(self.driver)
         HomePage.signUpClick()
         sign_up = TestHelper.LoginPage(self.driver)
         sign_up.signUp_test_full()
-        sign_up.registerClick()
-        if values.error1 in self.driver.page_source:
+        while True:
+            try:
+                sign_up.registerClick()
+            except WebDriverException:
+                print "Button is not available"
+            else:
+                break
+        if TestHelper.error1 in self.driver.page_source:
             sign_up.signUp_else()
             sign_up.registerClick()
             print "User " + TestHelper.testemail2 + " registered"
         else:
             print "User " + TestHelper.testemail + " registered"
+        print self.driver.current_url
+        url = self.driver.current_url
+        if url == "https://uat.vipoutlet.com/":
+            print "PVG 838 is Done - After Login on version page redirect to My Account, should on Home Page"
+        else:
+            print "PVG 838 is Failed"
+
+        header =TestHelper.Header(self.driver)
+        header.LoginUserHeader()
         HomePage.productOnHomePage()
         while False:
             try:
@@ -39,19 +44,38 @@ class VipOutletTestCheckout(unittest.TestCase):
             else:
                 print "Autotest over"
                 break
-        addtocart = TestHelper.addtoCartProductPage(self.driver)
-        addtocart.addToCart()
-        checkout = TestHelper.AddAddressCheckout(self.driver)
         while True:
             try:
-                checkout.addPaymentCheckout()
+                addtocart = TestHelper.ProductPage(self.driver)
+                addtocart.addToCartProductPageMethod()
+            except NoSuchElementException,e:
+                print "Click button [Add to Cart] on product page"
+            else:
+                break
+        checkout = TestHelper.CheckoutPage(self.driver)
+        # while True:
+        #     try:
+        #         checkout.addtoWishlistCheckoutElement()
+        #     except NoSuchElementException:
+        #         print "Click [Add to Wishlist] button"
+        #     else:
+        #         break
+        # if checkout.checkwishlistCheckout:
+        #     if (checkout.checkwishlistCheckout.text == 1):
+        #         print "Wishlist"+checkout.checkwishlistCheckout.text+"Product is Added to Wishlist"
+        # else:
+        #     print "Product is not added to Wishlist - Fail"
+        while True:
+            try:
+                checkout.addNewPaymentCheckout()
             except WebDriverException,e:
                 print "Unable to click Add Payment in Checkout, retrying"
             else:
                 break
-        checkout.credit_card_checkout()
-        checkout.addAddressIcon()
-        checkout.add_address_checkout()
-        checkout.addAddressCheckoutPayment()
+        checkoutAddress = TestHelper.AddAddressCheckout(self.driver)
+        checkoutAddress.credit_card_checkout()
+        checkoutAddress.addAddressIcon()
+        checkoutAddress.add_address_checkout()
+        checkoutAddress.addAddressCheckoutPayment()
 
 
